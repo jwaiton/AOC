@@ -6,12 +6,28 @@ int comp(const void *a, const void *b) {
     return (*(int *)a - *(int *)b);
 }
 
+int counter(int *n, int count, int d) {
+    // n is the list you're checking
+    // count is the length of the array
+    // d is the value you're looking for
+    // counts the number of occurrences in a list
+    int total = 0;
+    for (int i = 0; i < count; i++) {
+        if (n[i]==d)
+            total +=1;
+        
+    }
+    return total;
+}
+   
+
 int main() {
        
     int *list1 = NULL;
     int *list2 = NULL;
     int *comparison_list = NULL;
     int count = 0;
+    int num_of_occ = 0;
     int num1, num2;
     FILE *file;
     
@@ -68,6 +84,15 @@ int main() {
     }
     printf("\n\n");
 
+    int similarity_score = 0;
+    // collect the sum of the comparisons
+    for (int i = 0; i < count; i++) {
+        num_of_occ = counter(list2, count, list1[i]);
+        similarity_score += (num_of_occ * list1[i]);
+    }
+
+    printf("Similarity score: %d\n", similarity_score);
+    printf("\n");
     // sort
     qsort(list1, count, sizeof(int), comp);
     qsort(list2, count, sizeof(int), comp);
@@ -95,7 +120,11 @@ int main() {
         total_sum += comparison_list[i];
     }
     printf("Total difference: %d\n", total_sum);
+    printf("\n");
     
+
+
+
     free(list1);
     free(list2);
     free(comparison_list);
