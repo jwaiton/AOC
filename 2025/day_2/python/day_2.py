@@ -13,23 +13,44 @@ def interpret_data(path):
         for b in bounds:
             yield int(b[0]), int(b[1])
 
-def find_duplicate_substrings(value):
+def find_repeaters(value):
     '''
-    checks if any duplicate substrings exist within a value
-    REALISATION: this is not what the problem wants
+    loop through the values, checking that each small substring doesnt duplicate throughout
+    the rest of the string
     '''
-    # extract all possible substrings
-    substrings = [value[i:j] for i in range(len(value)) for j in range(i+1, len(value)+1)]
-    # find duplicates, O(n*n) but who cares
-    duplicates = set([x for x in substrings if substrings.count(x) > 1])
 
-    # return invalid id to add if there are duplicates
-    if len(duplicates) != 0:
-        print(f'Invalid id of {value}')
-        return int(value)
-    else:
-        return 0
+    # extract list of substrings to check against the main string
+    x = [(value[:i], value[i:]) for i, _ in enumerate(value)]
 
+    #if value == '1010':
+        #print(x)
+    for i in x:
+        #if value == '1010':
+            #print(i)
+        head = i[0]
+        tail = i[1]
+        #print(f'head: {head}, tail: {tail}')
+
+        # must not be an empty substring
+        if head == '' or tail == '':
+            continue
+        # must be divisible by the length of your substring
+        if len(value) % len(head) != 0:
+            continue
+        # divide the remaining string up, if its a set it'll remove duplicates --> only one entry
+        split_substring = set([tail[i:i+len(head)] for i in range(0, len(tail), len(head))] + [head])
+
+        #if value == '1010':
+        #    print(f'1010 diagnostics: head {head}, tail: {tail}\nsplit_substring: {split_substring}')
+
+        if len(split_substring) == 1:
+            print(f'{value} is a repeating sequence of {head}')
+            #print(f'Diagnostics: head {head}, tail: {tail}\nsplit_substring: {split_substring}')
+            return int(value)
+        else:
+            continue
+
+    return 0
 
 def find_doublet_IDs(value):
     '''
@@ -48,7 +69,7 @@ def find_doublet_IDs(value):
         return 0
 
 def main():
-    path = '../../input/day2_puzzle1_example.txt'
+    #path = '../../input/day2_puzzle1_example.txt'
     path = '../../input/day2_puzzle1.txt'
     bound_generator = interpret_data(path)
 
@@ -58,8 +79,8 @@ def main():
         #print(f'Lower bound: {lower_bound}, Upper bound: {upper_bound}')
 
         for i in range(lower_bound, upper_bound + 1):
-            #duplicated_added += find_duplicate_substrings(str(i))
-            duplicated_added += find_doublet_IDs(str(i))
+            duplicated_added += find_repeaters(str(i))
+            #duplicated_added += find_doublet_IDs(str(i))
 
 
 
