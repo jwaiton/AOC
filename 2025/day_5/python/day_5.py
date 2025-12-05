@@ -27,6 +27,17 @@ def return_fresh(region):
     return fresh_set
 
 
+def check_fresh_range(region : str, available : int):
+    '''
+    takes all region ranges and checks if the value falls within it, if so
+    set to true
+    '''
+    lower, upper = region.split('-')
+    if (int(available)>= int(lower)) and (int(available) <= int(upper)):
+        return 1
+    else:
+        return 0
+
 if __name__ == '__main__':
 
     #path = '../../input/day5_puzzle1_example.txt'
@@ -37,17 +48,15 @@ if __name__ == '__main__':
 
     fresh, available = parse_lines(lines)
 
-    full_fresh_set = set()
-    for f in tqdm(fresh):
-        # create set of all ids that are fresh
-        full_fresh_set = full_fresh_set.union(return_fresh(f))
-
-    #print(f'Full fresh set: {full_fresh_set}')
 
     total_available = 0
     for a in tqdm(available):
-        #print(a)
-        if int(a) in full_fresh_set:
-            total_available += 1
+
+        for f in fresh:
+            if check_fresh_range(f,a) == 1:
+                print(f'Fresh {a} in {f}')
+                total_available += 1
+                break
+
 
     print(f'Total fresh and available ingredients: {total_available}')
